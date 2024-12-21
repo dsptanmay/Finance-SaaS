@@ -7,5 +7,6 @@ namespace NodeJS {
     NEXT_PUBLIC_CLERK_SIGN_IN: string;
     NEXT_PUBLIC_CLERK_SIGN_UP: string;
     DATABASE_URL: string;
+    NEXT_PUBLIC_APP_URL: string;
   }
 }
