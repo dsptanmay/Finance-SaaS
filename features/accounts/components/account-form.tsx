@@ -12,7 +12,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -24,7 +23,7 @@ type Props = {
   id?: string;
   defaultValues?: FormValues;
   onSubmit: (values: FormValues) => void;
-  onDelete?: void;
+  onDelete?: () => Promise<void>;
   disabled?: boolean;
 };
 
