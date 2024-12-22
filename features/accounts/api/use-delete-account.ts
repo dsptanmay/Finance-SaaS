@@ -23,6 +23,8 @@ export const useDeleteAccount = (id?: string) => {
         exact: true,
       });
       queryClient.invalidateQueries({ queryKey: ["accounts"], exact: true });
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+
       // TODO: Invalidate summary and transactions
     },
     onError: () => {

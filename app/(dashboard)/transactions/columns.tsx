@@ -10,6 +10,8 @@ import { Actions } from "./actions";
 import { format } from "date-fns";
 import { formatCurrency } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { AccountColumn } from "./account-column";
+import { CategoryColumn } from "./category-column";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -74,7 +76,13 @@ export const columns: ColumnDef<ResponseType>[] = [
       );
     },
     cell: ({ row }) => {
-      return <span className="text-center">{row.original.category}</span>;
+      return (
+        <CategoryColumn
+          id={row.original.id}
+          category={row.original.category}
+          categoryId={row.original.categoryId}
+        />
+      );
     },
   },
   {
@@ -130,7 +138,12 @@ export const columns: ColumnDef<ResponseType>[] = [
       );
     },
     cell: ({ row }) => {
-      return <span className="text-center">{row.original.account}</span>;
+      return (
+        <AccountColumn
+          account={row.original.account}
+          accountId={row.original.accountId}
+        />
+      );
     },
   },
   {

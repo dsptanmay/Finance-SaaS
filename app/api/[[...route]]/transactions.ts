@@ -77,7 +77,7 @@ const app = new Hono()
       if (!auth?.userId) return c.json({ error: "Unauthorized" }, 401);
       const { id } = c.req.valid("param");
       if (!id) return c.json({ error: "Missing ID" }, 400);
-      const data = await db
+      const [data] = await db
         .select({
           id: transactions.id,
           date: transactions.date,

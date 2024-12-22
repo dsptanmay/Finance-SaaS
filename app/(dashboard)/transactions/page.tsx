@@ -12,7 +12,7 @@ import { useGetTransactions } from "@/features/transactions/api/use-get-transact
 import { useNewTransaction } from "@/features/transactions/hooks/use-new-transaction";
 
 function TransactionsPage() {
-  const newAccount = useNewTransaction();
+  const newTransaction = useNewTransaction();
   const deleteTransactions = useBulkDeleteTransactions();
   const transactionsQuery = useGetTransactions();
   const transactions = transactionsQuery.data || [];
@@ -42,7 +42,7 @@ function TransactionsPage() {
           <CardTitle className="text-xl line-clamp-1">
             Transaction History
           </CardTitle>
-          <Button onClick={newAccount.onOpen}>
+          <Button onClick={newTransaction.onOpen}>
             <Plus className="size-4 mr-2" />
             <span>Add new</span>
           </Button>

@@ -23,6 +23,8 @@ export const useDeleteCategory = (id?: string) => {
         exact: true,
       });
       queryClient.invalidateQueries({ queryKey: ["categories"], exact: true });
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
+
       // TODO: Invalidate summary and transactions
     },
     onError: () => {

@@ -24,7 +24,6 @@ export const useDeleteTransaction = (id?: string) => {
       });
       queryClient.invalidateQueries({
         queryKey: ["transactions"],
-        exact: true,
       });
       // TODO: Invalidate summary and transactions
     },
