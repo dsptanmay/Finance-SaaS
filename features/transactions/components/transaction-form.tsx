@@ -14,9 +14,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { DatePicker } from "@/components/custom-date-picker";
-import { CustomSelect } from "@/components/custom-select";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { DatePicker } from "@/components/custom-date-picker";
+
+import { CustomSelect } from "@/components/custom-select";
+import AmountInput from "@/components/custom-amount-input";
+
+import { convertAmountToMilliUnits } from "@/lib/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formSchema = z.object({
@@ -63,7 +68,7 @@ function TransactionForm({
 
   const handleSubmit = (values: FormValues) => {
     const amount = parseFloat(values.amount);
-    const amountInMilliUnits = 0;
+    const amountInMilliUnits = convertAmountToMilliUnits(amount);
     onSubmit({
       ...values,
       amount: amountInMilliUnits,
@@ -84,14 +89,14 @@ function TransactionForm({
         <FormField
           name="date"
           control={form.control}
-          disabled={false}
+          disabled={disabled}
           render={({ field }) => (
             <FormItem>
               <FormControl>
                 <DatePicker
                   value={field.value}
                   onChange={field.onChange}
-                  disabled={false}
+                  disabled={disabled}
                 />
               </FormControl>
 
@@ -150,6 +155,46 @@ function TransactionForm({
                   disabled={disabled}
                   placeholder="Add a payee"
                   {...field}
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          name="amount"
+          control={form.control}
+          disabled={disabled}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Amount</FormLabel>
+              <FormControl>
+                <AmountInput
+                  {...field}
+                  disabled={disabled}
+                  placeholder="0.00"
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          name="notes"
+          control={form.control}
+          disabled={disabled}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Notes</FormLabel>
+
+              <FormControl>
+                <Textarea
+                  {...field}
+                  disabled={disabled}
+                  value={field.value ?? ""}
+                  placeholder="Optional notes"
                 />
               </FormControl>
 
