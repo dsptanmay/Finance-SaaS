@@ -100,7 +100,7 @@ const app = new Hono()
         .where(and(eq(categories.userId, auth.userId), eq(categories.id, id)))
         .returning();
 
-      if (!data) return c.json({ error: "Account not found" }, 404);
+      if (!data) return c.json({ error: "Category not found" }, 404);
       return c.json({ data }, 201);
     }
   )
@@ -120,7 +120,7 @@ const app = new Hono()
         .where(and(eq(categories.userId, auth.userId), eq(categories.id, id)))
         .returning({ id: categories.id });
 
-      if (!data) return c.json({ error: "Account not found" }, 404);
+      if (!data) return c.json({ error: "Category not found" }, 404);
       return c.json({ data }, 201);
     }
   );
