@@ -1,18 +1,22 @@
+"use client";
 import { Trash } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { insertTransactionSchema } from "@/db/schema";
 
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
-import { insertTransactionSchema } from "@/db/schema";
+import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/custom-date-picker";
 import { CustomSelect } from "@/components/custom-select";
+import { Input } from "@/components/ui/input";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formSchema = z.object({
@@ -54,11 +58,16 @@ function TransactionForm({
 }: Props) {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: defaultValues,
+    defaultValues,
   });
 
   const handleSubmit = (values: FormValues) => {
-    console.log({ values });
+    const amount = parseFloat(values.amount);
+    const amountInMilliUnits = 0;
+    onSubmit({
+      ...values,
+      amount: amountInMilliUnits,
+    });
   };
 
   const handleDelete = () => {
@@ -68,8 +77,28 @@ function TransactionForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
+        autoCapitalize="off"
+        autoComplete="off"
         className="space-y-4 pt-4"
       >
+        <FormField
+          name="date"
+          control={form.control}
+          disabled={false}
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <DatePicker
+                  value={field.value}
+                  onChange={field.onChange}
+                  disabled={false}
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           name="accountId"
           control={form.control}
@@ -108,8 +137,28 @@ function TransactionForm({
             </FormItem>
           )}
         />
-        <Button className="w-full" disabled={disabled}>
-          {id ? "Save changes" : "Create Account"}
+        <FormField
+          name="payee"
+          control={form.control}
+          disabled={disabled}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Payee</FormLabel>
+
+              <FormControl>
+                <Input
+                  disabled={disabled}
+                  placeholder="Add a payee"
+                  {...field}
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button className="w-full" disabled={disabled} variant="default">
+          {id ? "Save changes" : "Create Transaction"}
         </Button>
         {!!id && (
           <Button
@@ -120,7 +169,7 @@ function TransactionForm({
             variant="outline"
           >
             <Trash className="size-4 mr-2" />
-            <span>Delete Account</span>
+            <span>Delete Transaction</span>
           </Button>
         )}
       </form>
