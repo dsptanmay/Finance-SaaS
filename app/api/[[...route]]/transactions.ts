@@ -184,6 +184,39 @@ const app = new Hono()
         .returning();
       return c.json({ data });
     }
+  )
+  .delete(
+    "/:id",
+    clerkMiddleware(),
+    zValidator("param", z.object({ id: z.string().optional() })),
+
+    async (c) => {
+      const auth = getAuth(c);
+      const { id } = c.req.valid("param");
+      if (!auth?.userId) return c.json({ error: "Unauthorized" }, 401);
+      if (!id) return c.json({ error: "Missing ID" }, 400);
+
+      const transactionsToDelete = db.$with("transactions_to_delete").as(
+        db
+          .select({ id: transactions.id })
+          .from(transactions)
+          .innerJoin(accounts, eq(transactions.accountId, accounts.id))
+          .where(and(eq(transactions.id, id), eq(accounts.userId, auth.userId)))
+      );
+
+      const [data] = await db
+        .with(transactionsToDelete)
+        .delete(transactions)
+        .where(
+          inArray(
+            transactions.id,
+            sql`(select id from ${transactionsToDelete})`
+          )
+        )
+        .returning({ id: transactions.id });
+
+      return c.json({ data });
+    }
   );
 
 export default app;
