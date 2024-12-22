@@ -149,6 +149,41 @@ const app = new Hono()
         .returning({ id: transactions.id });
       return c.json({ data });
     }
+  )
+  .patch(
+    "/:id",
+    clerkMiddleware(),
+    zValidator("param", z.object({ id: z.string().optional() })),
+    zValidator("json", insertTransactionSchema.omit({ id: true })),
+    async (c) => {
+      const auth = getAuth(c);
+      const { id } = c.req.valid("param");
+      const values = c.req.valid("json");
+
+      if (!id) return c.json({ error: "Missing ID" }, 400);
+      if (!auth?.userId) return c.json({ error: "Unauthorized" }, 401);
+
+      const transactionsToUpdate = db.$with("transactions_to_update").as(
+        db
+          .select({ id: transactions.id })
+          .from(transactions)
+          .innerJoin(accounts, eq(transactions.accountId, accounts.id))
+          .where(and(eq(transactions.id, id), eq(accounts.userId, auth.userId)))
+      );
+
+      const [data] = await db
+        .with(transactionsToUpdate)
+        .update(transactions)
+        .set(values)
+        .where(
+          inArray(
+            transactions.id,
+            sql`(select id from ${transactionsToUpdate})`
+          )
+        )
+        .returning();
+      return c.json({ data });
+    }
   );
 
 export default app;
