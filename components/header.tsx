@@ -4,6 +4,7 @@ import Navigation from "@/components/navigation";
 import { ClerkLoaded, ClerkLoading, UserButton } from "@clerk/nextjs";
 import { Loader2 } from "lucide-react";
 import WelcomeMessage from "@/components/welcome-message";
+import { Filters } from "@/components/filters";
 
 function Header() {
   return (
@@ -22,6 +23,7 @@ function Header() {
           </ClerkLoading>
         </div>
         <WelcomeMessage />
+        <Filters />
       </div>
     </header>
   );
