@@ -20,7 +20,6 @@ import { useCreateCategory } from "@/features/categories/api/use-create-category
 import { useGetCategories } from "@/features/categories/api/use-get-categories";
 import { useCreateAccount } from "@/features/accounts/api/use-create-account";
 import { useGetAccounts } from "@/features/accounts/api/use-get-accounts";
-import { convertAmountFromMilliUnits } from "@/lib/utils";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const formSchema = insertTransactionSchema.omit({
@@ -88,9 +87,7 @@ function EditTransactionSheet() {
     ? {
         accountId: transactionQuery.data.accountId,
         categoryId: transactionQuery.data.categoryId,
-        amount: convertAmountFromMilliUnits(
-          transactionQuery.data.amount
-        ).toString(),
+        amount: transactionQuery.data.amount.toString(),
         date: transactionQuery.data.date
           ? new Date(transactionQuery.data.date)
           : new Date(),
