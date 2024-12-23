@@ -4,7 +4,7 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   experimental: {
-    missingSuspenseWithCSRBailout: true,
+    missingSuspenseWithCSRBailout: false,
   },
 };
 
