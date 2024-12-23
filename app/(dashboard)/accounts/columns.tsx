@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,7 @@ export type ResponseType = InferResponseType<
   200
 >["data"][0];
 
-export const columns: ColumnDef<ResponseType>[] = [
+export const columns: ColumnDef<ResponseType, any>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -38,7 +39,6 @@ export const columns: ColumnDef<ResponseType>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-  ,
   {
     accessorKey: "name",
     header: ({ column }) => {

@@ -38,7 +38,6 @@ export const columns: ColumnDef<ResponseType>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-  ,
   {
     accessorKey: "name",
     header: ({ column }) => {

@@ -43,7 +43,6 @@ export const columns: ColumnDef<ResponseType>[] = [
     enableSorting: false,
     enableHiding: false,
   },
-  ,
   {
     accessorKey: "date",
     header: ({ column }) => {
