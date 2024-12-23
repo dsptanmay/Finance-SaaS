@@ -1,7 +1,6 @@
 import { db } from "@/db/drizzle";
 import { accounts, insertAccountSchema } from "@/db/schema";
 import { clerkMiddleware, getAuth } from "@hono/clerk-auth";
-// import { HTTPException } from "hono/http-exception";
 import { createId } from "@paralleldrive/cuid2";
 import { Hono } from "hono";
 import { and, eq, inArray } from "drizzle-orm";
@@ -9,13 +8,13 @@ import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 
 const app = new Hono()
-  .get("/", clerkMiddleware(), async (c) => {
+  .use("*", clerkMiddleware())
+  .get("/", async (c) => {
     const auth = getAuth(c);
-    if (!auth?.userId)
-      // throw new HTTPException(401, {
-      //   res: c.json({ error: "Unauthorized" }, 401),
-      // });
+    if (!auth?.userId) {
+      console.error(auth);
       return c.json({ error: "Unauthorized" }, 401);
+    }
     const data = await db
       .select({ id: accounts.id, name: accounts.name })
       .from(accounts)
@@ -24,7 +23,6 @@ const app = new Hono()
   })
   .get(
     "/:id",
-    clerkMiddleware(),
     zValidator("param", z.object({ id: z.string().optional() })),
     async (c) => {
       const auth = getAuth(c);
@@ -44,7 +42,6 @@ const app = new Hono()
   )
   .post(
     "/",
-    clerkMiddleware(),
     zValidator("json", insertAccountSchema.pick({ name: true })),
     async (c) => {
       const auth = getAuth(c);
@@ -61,7 +58,6 @@ const app = new Hono()
   )
   .post(
     "/bulk-delete",
-    clerkMiddleware(),
     zValidator("json", z.object({ ids: z.array(z.string()) })),
     async (c) => {
       const auth = getAuth(c);
@@ -83,7 +79,6 @@ const app = new Hono()
   )
   .patch(
     "/:id",
-    clerkMiddleware(),
     zValidator("param", z.object({ id: z.string().optional() })),
     zValidator("json", insertAccountSchema.pick({ name: true })),
     async (c) => {
@@ -106,7 +101,6 @@ const app = new Hono()
   )
   .delete(
     "/:id",
-    clerkMiddleware(),
     zValidator("param", z.object({ id: z.string().optional() })),
     async (c) => {
       const auth = getAuth(c);
